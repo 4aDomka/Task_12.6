@@ -165,28 +165,28 @@ echo $gender_description;
 
 // Идеальный подбор пары
 
-function getPerfectPartner($last_name, $first_name, $patronymic, $array){
-    $formatted_last_name = mb_convert_case($last_name, MB_CASE_TITLE);
-    $formatted_first_name= mb_convert_case($first_name, MB_CASE_TITLE);
-    $formatted_patronymic = mb_convert_case($patronymic, MB_CASE_TITLE);
+function getPerfectPartner($last_name, $first_name, $patronymic, $persons_array) {
+    $formatted_last_name = mb_convert_case($last_name, MB_CASE_TITLE, 'UTF-8');
+    $formatted_first_name = mb_convert_case($first_name, MB_CASE_TITLE, 'UTF-8');
+    $formatted_patronymic = mb_convert_case($patronymic, MB_CASE_TITLE, 'UTF-8');
 
     $full_name = getFullnameFromParts($formatted_last_name, $formatted_first_name, $formatted_patronymic);
 
     $gender = getGenderFromName($full_name);
 
-    $suitable_partners = array_filter ($array, function($person) use ($gender){
+    $suitable_partners = array_filter ($persons_array, function ($person) use ($gender) {
         $person_gender = getGenderFromName($person['fullname']);
-        return $person_gender === $gender;
+        return $person_gender === -$gender;
     });
 
     $random_partner = $suitable_partners[array_rand($suitable_partners)];
 
-    $compatibilitiy_percentage = round(mt_rand(5000, 10000)/100, 2);
+    $compatibility_percentage = round(mt_rand(5000, 10000) / 100, 2);
 
     $partner_short_name = getShortName($random_partner['fullname']);
 
-    $result = $full_name .'+'. $partner_short_name .'='. PHP_EOL;
-    $result .= '♡ Идеально на ' . $compatibilitiy_percentage . '% ♡';
+    $result = $full_name .' + '. $partner_short_name .' = '. PHP_EOL;
+    $result .= '♡ Идеально на ' . $compatibility_percentage . '% ♡';
 
     return $result;
 }
